@@ -53,6 +53,7 @@ class LinearRegression(BaseEstimator):
         if self.include_intercept_:
             X = np.concatenate((np.ones((X.shape[0], 1)), X), axis=1)
 
+        p = pinv(X)
         self.coefs_ = (pinv(X) @ y.transpose())
 
     def _predict(self, X: np.ndarray) -> np.ndarray:
@@ -69,8 +70,9 @@ class LinearRegression(BaseEstimator):
         responses : ndarray of shape (n_samples, )
             Predicted responses of given samples
         """
-        # todo: should i think about intercept?
-        return (X @ self.coefs_[1:]) + self.coefs_[0]
+        if X.shape[1] != self.coefs_.shape[0]:
+            return (X @ self.coefs_[1:]) + self.coefs_[0]
+        return X @ self.coefs_
 
     def _loss(self, X: np.ndarray, y: np.ndarray) -> float:
         """
