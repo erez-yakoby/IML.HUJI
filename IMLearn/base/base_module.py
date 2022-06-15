@@ -5,7 +5,8 @@ import numpy as np
 
 class BaseModule(ABC):
     """
-    Base class representing a function to be optimized in a descent method algorithm
+    Base class representing a function to be optimized in a descent method
+    algorithm
 
     Attributes
     ----------
@@ -39,13 +40,15 @@ class BaseModule(ABC):
 
         Examples
         --------
-        For f:R^d->R defined by f(x) = <w,x> then: n_in=d, n_out=1 and thus output shape is (1,)
+        For f:R^d->R defined by f(x) = <w,x> then: n_in=d, n_out=1 and thus
+        output shape is (1,)
         """
         raise NotImplementedError()
 
     def compute_jacobian(self, **kwargs) -> np.ndarray:
         """
-        Compute the derivative of the function with respect to each of its parameters
+        Compute the derivative of the function with respect to each of its
+        parameters
 
         Parameters
         ----------
@@ -58,7 +61,8 @@ class BaseModule(ABC):
 
         Examples
         --------
-        For f:R^d->R defined by f(x) = <w,x> then: n_in=d, n_out=1 and thus output shape is (1,d)
+        For f:R^d->R defined by f(x) = <w,x> then: n_in=d, n_out=1 and thus
+        output shape is (1,d)
 
         """
         raise NotImplementedError()
@@ -93,8 +97,7 @@ class BaseModule(ABC):
         Returns
         -------
         shape: Tuple[int]
-            Specifying the dimensions of the functions parameters. If ``self.weights`` is None returns `(0,)`
+            Specifying the dimensions of the functions parameters. If
+            ``self.weights`` is None returns `(0,)`
         """
         return self.weights.shape if self.weights is not None else (0,)
-
-
