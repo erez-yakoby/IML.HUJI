@@ -122,32 +122,35 @@ class GradientDescent:
 
         """
         initial_w = f.weights
-        argmin = np.array(initial_w)
-        min_obj = f.compute_output()
-
-        sum_w = np.array(initial_w)
+        argmin = initial_w.copy()
+        min_obj = f.compute_output(X=X, y=y)
+        sum_w = initial_w.copy()
         n_changes = 1
-        self.callback_(solver=self, weight=np.array(initial_w),
-                       val=min_obj, grad=f.compute_jacobian())
+        self.callback_(solver=self, weight=initial_w.copy(),
+                       val=min_obj, grad=f.compute_jacobian(X=X, y=y))
 
         for t in range(self.max_iter_):
             eta = self.learning_rate_.lr_step(t=t)
-            jac = f.compute_jacobian()
+            jac = f.compute_jacobian(X=X, y=y)
             weights_new = f.weights - eta * jac
             delta = np.linalg.norm(weights_new - f.weights, ord=2)
 
             f.weights = weights_new
             n_changes += 1
             sum_w += weights_new
-            obj = f.compute_output()
+            obj = f.compute_output(X=X, y=y)
             if obj < min_obj:
                 min_obj = obj
                 argmin = weights_new
             self.callback_(solver=self, weight=weights_new, val=obj, t=t,
-                           grad=f.compute_jacobian(), eta=eta, delta=delta)
+                           grad=f.compute_jacobian(X=X, y=y), eta=eta, delta=delta)
             if delta <= self.tol_: break
 
         avg = sum_w / n_changes
-        last = f.weights
-        f.weights = initial_w
+        last = np.array(f.weights)
+        f.weights = initial_w.copy()
         return {"last": last, "best": argmin, "average": avg}[self.out_type_]
+
+
+
+
